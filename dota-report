@@ -1,30 +1,9 @@
 #!/usr/bin/env node
 "use strict";
-var __create = Object.create;
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
-};
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
 
 // node_modules/y18n/build/index.cjs
 var require_build = __commonJS({
@@ -454,7 +433,7 @@ var require_build2 = __commonJS({
         let error = null;
         checkConfiguration();
         let notFlags = [];
-        const argv2 = Object.assign(/* @__PURE__ */ Object.create(null), { _: [] });
+        const argv = Object.assign(/* @__PURE__ */ Object.create(null), { _: [] });
         const argvReturn = {};
         for (let i = 0; i < args.length; i++) {
           const arg = args[i];
@@ -592,40 +571,40 @@ var require_build2 = __commonJS({
             pushPositional(arg);
           }
         }
-        applyEnvVars(argv2, true);
-        applyEnvVars(argv2, false);
-        setConfig(argv2);
+        applyEnvVars(argv, true);
+        applyEnvVars(argv, false);
+        setConfig(argv);
         setConfigObjects();
-        applyDefaultsAndAliases(argv2, flags.aliases, defaults, true);
-        applyCoercions(argv2);
+        applyDefaultsAndAliases(argv, flags.aliases, defaults, true);
+        applyCoercions(argv);
         if (configuration["set-placeholder-key"])
-          setPlaceholderKeys(argv2);
+          setPlaceholderKeys(argv);
         Object.keys(flags.counts).forEach(function(key) {
-          if (!hasKey(argv2, key.split(".")))
+          if (!hasKey(argv, key.split(".")))
             setArg(key, 0);
         });
         if (notFlagsOption && notFlags.length)
-          argv2[notFlagsArgv] = [];
+          argv[notFlagsArgv] = [];
         notFlags.forEach(function(key) {
-          argv2[notFlagsArgv].push(key);
+          argv[notFlagsArgv].push(key);
         });
         if (configuration["camel-case-expansion"] && configuration["strip-dashed"]) {
-          Object.keys(argv2).filter((key) => key !== "--" && key.includes("-")).forEach((key) => {
-            delete argv2[key];
+          Object.keys(argv).filter((key) => key !== "--" && key.includes("-")).forEach((key) => {
+            delete argv[key];
           });
         }
         if (configuration["strip-aliased"]) {
           [].concat(...Object.keys(aliases).map((k) => aliases[k])).forEach((alias) => {
             if (configuration["camel-case-expansion"] && alias.includes("-")) {
-              delete argv2[alias.split(".").map((prop) => camelCase(prop)).join(".")];
+              delete argv[alias.split(".").map((prop) => camelCase(prop)).join(".")];
             }
-            delete argv2[alias];
+            delete argv[alias];
           });
         }
         function pushPositional(arg) {
           const maybeCoercedNumber = maybeCoerceNumber("_", arg);
           if (typeof maybeCoercedNumber === "string" || typeof maybeCoercedNumber === "number") {
-            argv2._.push(maybeCoercedNumber);
+            argv._.push(maybeCoercedNumber);
           }
         }
         function eatNargs(i, key, args2, argAfterEqualSign) {
@@ -705,11 +684,11 @@ var require_build2 = __commonJS({
           }
           const value = processValue(key, val, shouldStripQuotes);
           const splitKey = key.split(".");
-          setKey(argv2, splitKey, value);
+          setKey(argv, splitKey, value);
           if (flags.aliases[key]) {
             flags.aliases[key].forEach(function(x) {
               const keyProperties = x.split(".");
-              setKey(argv2, keyProperties, value);
+              setKey(argv, keyProperties, value);
             });
           }
           if (splitKey.length > 1 && configuration["dot-notation"]) {
@@ -719,7 +698,7 @@ var require_build2 = __commonJS({
               a.shift();
               keyProperties = keyProperties.concat(a);
               if (!(flags.aliases[key] || []).includes(keyProperties.join("."))) {
-                setKey(argv2, keyProperties, value);
+                setKey(argv, keyProperties, value);
               }
             });
           }
@@ -782,11 +761,11 @@ var require_build2 = __commonJS({
           }
           return value;
         }
-        function setConfig(argv3) {
+        function setConfig(argv2) {
           const configLookup = /* @__PURE__ */ Object.create(null);
           applyDefaultsAndAliases(configLookup, flags.aliases, defaults);
           Object.keys(flags.configs).forEach(function(configKey) {
-            const configPath = argv3[configKey] || configLookup[configKey];
+            const configPath = argv2[configKey] || configLookup[configKey];
             if (configPath) {
               try {
                 let config = null;
@@ -809,7 +788,7 @@ var require_build2 = __commonJS({
               } catch (ex) {
                 if (ex.name === "PermissionDenied")
                   error = ex;
-                else if (argv3[configKey])
+                else if (argv2[configKey])
                   error = Error(__("Invalid JSON config file: %s", configPath));
               }
             }
@@ -822,7 +801,7 @@ var require_build2 = __commonJS({
             if (typeof value === "object" && value !== null && !Array.isArray(value) && configuration["dot-notation"]) {
               setConfigObject(value, fullKey);
             } else {
-              if (!hasKey(argv2, fullKey.split(".")) || checkAllAliases(fullKey, flags.arrays) && configuration["combine-arrays"]) {
+              if (!hasKey(argv, fullKey.split(".")) || checkAllAliases(fullKey, flags.arrays) && configuration["combine-arrays"]) {
                 setArg(fullKey, value);
               }
             }
@@ -835,7 +814,7 @@ var require_build2 = __commonJS({
             });
           }
         }
-        function applyEnvVars(argv3, configOnly) {
+        function applyEnvVars(argv2, configOnly) {
           if (typeof envPrefix === "undefined")
             return;
           const prefix = typeof envPrefix === "string" ? envPrefix : "";
@@ -848,24 +827,24 @@ var require_build2 = __commonJS({
                 }
                 return camelCase(key);
               });
-              if ((configOnly && flags.configs[keys.join(".")] || !configOnly) && !hasKey(argv3, keys)) {
+              if ((configOnly && flags.configs[keys.join(".")] || !configOnly) && !hasKey(argv2, keys)) {
                 setArg(keys.join("."), env2[envVar]);
               }
             }
           });
         }
-        function applyCoercions(argv3) {
+        function applyCoercions(argv2) {
           let coerce;
           const applied = /* @__PURE__ */ new Set();
-          Object.keys(argv3).forEach(function(key) {
+          Object.keys(argv2).forEach(function(key) {
             if (!applied.has(key)) {
               coerce = checkAllAliases(key, flags.coercions);
               if (typeof coerce === "function") {
                 try {
-                  const value = maybeCoerceNumber(key, coerce(argv3[key]));
+                  const value = maybeCoerceNumber(key, coerce(argv2[key]));
                   [].concat(flags.aliases[key] || [], key).forEach((ali) => {
                     applied.add(ali);
-                    argv3[ali] = value;
+                    argv2[ali] = value;
                   });
                 } catch (err) {
                   error = err;
@@ -874,14 +853,14 @@ var require_build2 = __commonJS({
             }
           });
         }
-        function setPlaceholderKeys(argv3) {
+        function setPlaceholderKeys(argv2) {
           flags.keys.forEach((key) => {
             if (~key.indexOf("."))
               return;
-            if (typeof argv3[key] === "undefined")
-              argv3[key] = void 0;
+            if (typeof argv2[key] === "undefined")
+              argv2[key] = void 0;
           });
-          return argv3;
+          return argv2;
         }
         function applyDefaultsAndAliases(obj, aliases2, defaults2, canLog = false) {
           Object.keys(defaults2).forEach(function(key) {
@@ -1092,7 +1071,7 @@ var require_build2 = __commonJS({
         }
         return {
           aliases: Object.assign({}, flags.aliases),
-          argv: Object.assign(argvReturn, argv2),
+          argv: Object.assign(argvReturn, argv),
           configuration,
           defaulted: Object.assign({}, defaulted),
           error,
@@ -1175,7 +1154,7 @@ var require_build2 = __commonJS({
         }
       }
     });
-    var yargsParser = function Parser2(args, opts) {
+    var yargsParser = function Parser(args, opts) {
       const result = parser.parse(args.slice(), opts);
       return result.argv;
     };
@@ -4711,22 +4690,107 @@ ${t5.join("\n")}` : "";
   }
 });
 
-// node_modules/yargs/yargs.mjs
-var import_build = __toESM(require_build4(), 1);
-var { applyExtends, cjsPlatformShim, Parser, processArgv, Yargs } = import_build.default;
-Yargs.applyExtends = (config, cwd, mergeExtends) => {
-  return applyExtends(config, cwd, mergeExtends, cjsPlatformShim);
-};
-Yargs.hideBin = processArgv.hideBin;
-Yargs.Parser = Parser;
-var yargs_default = Yargs;
+// node_modules/yargs/index.cjs
+var require_yargs = __commonJS({
+  "node_modules/yargs/index.cjs"(exports2, module2) {
+    "use strict";
+    var { Yargs, processArgv } = require_build4();
+    Argv(processArgv.hideBin(process.argv));
+    module2.exports = Argv;
+    function Argv(processArgs, cwd) {
+      const argv = Yargs(processArgs, cwd, require);
+      singletonify(argv);
+      return argv;
+    }
+    function defineGetter(obj, key, getter) {
+      Object.defineProperty(obj, key, {
+        configurable: true,
+        enumerable: true,
+        get: getter
+      });
+    }
+    function lookupGetter(obj, key) {
+      const desc = Object.getOwnPropertyDescriptor(obj, key);
+      if (typeof desc !== "undefined") {
+        return desc.get;
+      }
+    }
+    function singletonify(inst) {
+      [
+        ...Object.keys(inst),
+        ...Object.getOwnPropertyNames(inst.constructor.prototype)
+      ].forEach((key) => {
+        if (key === "argv") {
+          defineGetter(Argv, key, lookupGetter(inst, key));
+        } else if (typeof inst[key] === "function") {
+          Argv[key] = inst[key].bind(inst);
+        } else {
+          defineGetter(Argv, "$0", () => inst.$0);
+          defineGetter(Argv, "parsed", () => inst.parsed);
+        }
+      });
+    }
+  }
+});
+
+// src/lib/dota-sdk.ts
+var BASE_URL = "https://api.opendota.com/";
+function serverFetch() {
+  const fetcher2 = async (input, init = {}) => {
+    const options = {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    };
+    if (init.headers) {
+      init.headers = {
+        ...options.headers,
+        ...init.headers
+      };
+    }
+    Object.assign(init, options);
+    return fetch(input, init);
+  };
+  return fetcher2;
+}
+var fetcher = serverFetch();
+async function getTeams({ limit }) {
+  const teamsUrl = new URL("/api/teams", BASE_URL);
+  let response = await fetcher(teamsUrl);
+  if (!response.ok) {
+    console.error("Failed to fetch teams");
+    return [];
+  }
+  let teams = await response.json();
+  teams = teams.sort((a, b) => {
+    if (Number(a.team_id) > Number(b.team_id)) {
+      return 1;
+    } else {
+      return -1;
+    }
+  });
+  if (limit) {
+    teams = teams.slice(0, limit);
+  }
+  return teams;
+}
 
 // src/cli.ts
-var argv = yargs_default(process.argv.slice(2)).options({
-  a: { type: "boolean", default: false },
-  b: { type: "string", demandOption: true },
-  c: { type: "number", alias: "chill" },
-  d: { type: "array" },
-  e: { type: "count" },
-  f: { choices: ["1", "2", "3"] }
-}).parse();
+require_yargs().command(
+  "generate",
+  "Generate Report",
+  (yargs) => {
+    yargs.option("limit", {
+      describe: "Number of teams to include",
+      default: 10
+    });
+  },
+  async (args) => {
+    if (args.limit) {
+      console.log(`Generating report for ${args.limit} teams.`);
+    }
+    const proPlayers = await getTeams({ limit: args.limit });
+    console.log(proPlayers);
+  }
+).help().argv;

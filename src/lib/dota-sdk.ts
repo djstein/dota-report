@@ -55,7 +55,7 @@ export async function getProPlayers(): Promise<ProPlayer[]> {
   return proPlayers;
 }
 
-export async function getTeams(): Promise<Team[]> {
+export async function getTeams({ limit }: { limit?: number }): Promise<Team[]> {
   const teamsUrl = new URL("/api/teams", BASE_URL);
   let response = await fetcher(teamsUrl);
   if (!response.ok) {
@@ -70,6 +70,9 @@ export async function getTeams(): Promise<Team[]> {
       return -1;
     }
   });
+  if (limit) {
+    teams = teams.slice(0, limit);
+  }
   return teams;
 }
 

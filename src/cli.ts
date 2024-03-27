@@ -1,14 +1,28 @@
 #!/usr/bin/env node
 
-import yargs from "yargs/yargs";
+import { Argv } from "yargs";
+import { getTeams } from "./lib/dota-sdk";
 
-const argv = yargs(process.argv.slice(2))
-  .options({
-    a: { type: "boolean", default: false },
-    b: { type: "string", demandOption: true },
-    c: { type: "number", alias: "chill" },
-    d: { type: "array" },
-    e: { type: "count" },
-    f: { choices: ["1", "2", "3"] },
-  })
-  .parse();
+function serve(port: string) {
+  console.info(`Serve on port ${port}.`);
+}
+
+require("yargs")
+  .command(
+    "generate",
+    "Generate Report",
+    (yargs: Argv) => {
+      yargs.option("limit", {
+        describe: "Number of teams to include",
+        default: 10,
+      });
+    },
+    async (args: any) => {
+      if (args.limit) {
+        console.log(`Generating report for ${args.limit} teams.`);
+      }
+      const proPlayers = await getTeams({ limit: args.limit });
+      console.log(proPlayers);
+    },
+  )
+  .help().argv;
