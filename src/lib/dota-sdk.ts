@@ -176,7 +176,7 @@ export async function getPlayersForTeam({
   let teamPlayerAssociations =
     (await response.json()) as TeamPlayerAssociation[];
   let players: Player[] = [];
-  Promise.all(
+  await Promise.all(
     teamPlayerAssociations.map(async (teamPlayerAssociation) => {
       let player = await getPlayer({
         accountId: teamPlayerAssociation.account_id.toString(),
