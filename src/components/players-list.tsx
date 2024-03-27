@@ -14,12 +14,22 @@ import { Player } from "@/types/dota";
 import { useEffect, useState } from "react";
 
 export default function PlayersList({ teamId }: { teamId: string }) {
-  const [players, setPlayers] = useState<Player[]>([]);
-  useEffect(() => {
-    getPlayersForTeam({ teamId: teamId?.toString() }).then((data) => {
-      setPlayers(data);
-    });
-  }, [teamId]);
+  const [players, setPlayers] = useState<Player[] | undefined>(undefined);
+  useEffect(
+    () => {
+      getPlayersForTeam({ teamId: teamId?.toString() }).then((data) => {
+        setPlayers(data);
+      });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
+  if (players === undefined) {
+    return <div>Loading...</div>;
+  } else if (players.length === 0) {
+    return <div>No players found or rate limit exceeded.</div>;
+  }
 
   return (
     <Table>
