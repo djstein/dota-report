@@ -1,4 +1,9 @@
-import type { Player, Team, TeamPlayerAssociation } from "@/types/dota";
+import type {
+  Player,
+  ProPlayer,
+  Team,
+  TeamPlayerAssociation,
+} from "@/types/dota";
 
 const BASE_URL = "https://api.opendota.com/";
 
@@ -31,6 +36,24 @@ export function serverFetch() {
 }
 
 const fetcher = serverFetch();
+
+export async function getProPlayers(): Promise<ProPlayer[]> {
+  const proPlayersUrl = new URL("/api/proPlayers", BASE_URL);
+  let response = await fetcher(proPlayersUrl);
+  if (!response.ok) {
+    console.error("Failed to fetch proPlayers");
+    return [];
+  }
+  let proPlayers = await response.json();
+  proPlayers = proPlayers.sort((a: ProPlayer, b: ProPlayer) => {
+    if (Number(a.account_id) > Number(b.account_id)) {
+      return 1;
+    } else {
+      return -1;
+    }
+  });
+  return proPlayers;
+}
 
 export async function getTeams(): Promise<Team[]> {
   const teamsUrl = new URL("/api/teams", BASE_URL);

@@ -5,17 +5,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Player, Team } from "@/types/dota";
+import { Team } from "@/types/dota";
 import Image from "next/image";
 import PlayersList from "./players-list";
 
-export function TeamDetails({
-  team,
-  players,
-}: {
-  team: Team;
-  players: Player[];
-}) {
+export function TeamDetails({ team }: { team: Team }) {
   return (
     <div className="w-full flex flex-col gap-4 justify-center align-middle items-center">
       <Card className="max-w-xl">
@@ -38,7 +32,7 @@ export function TeamDetails({
           )}
         </CardContent>
       </Card>
-      <PlayersList players={players} />
+      <PlayersList teamId={team.team_id} />
     </div>
   );
 }

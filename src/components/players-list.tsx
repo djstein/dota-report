@@ -9,12 +9,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getPlayersForTeam } from "@/lib/dota-sdk";
 import { Player } from "@/types/dota";
+import { useEffect, useState } from "react";
 
-export default function PlayersList({ players }: { players: Player[] }) {
-  if (players?.length === 0) {
-    return <div>No players found</div>;
-  }
+export default function PlayersList({ teamId }: { teamId: string }) {
+  const [players, setPlayers] = useState<Player[]>([]);
+  useEffect(() => {
+    getPlayersForTeam({ teamId: teamId?.toString() }).then((data) => {
+      setPlayers(data);
+    });
+  }, [teamId]);
+
   return (
     <Table>
       <TableCaption>Players</TableCaption>

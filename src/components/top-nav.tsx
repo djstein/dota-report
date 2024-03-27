@@ -18,6 +18,13 @@ export function TopNav() {
             <h1 className="font-extrabold p-2">DOTA Reports</h1>
           </NavigationMenuItem>
           <NavigationMenuItem>
+            <Link href="/pro-players" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Pro Players
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
             <Link href="/teams" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Teams
