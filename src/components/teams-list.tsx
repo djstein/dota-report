@@ -34,6 +34,7 @@ export default function TeamsList({ teams }: { teams: Team[] }) {
         <TableBody>
           {teams?.map((team) => (
             <TableRow
+              className="cursor-pointer"
               key={team.team_id}
               onClick={() => router.push(`/teams/${team.team_id}`)}
             >
