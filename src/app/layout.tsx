@@ -12,8 +12,8 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: "Dota Report",
-  description: "Dota Report",
+  title: "DOTA Report",
+  description: "DOTA Report",
 };
 
 export default function RootLayout({
