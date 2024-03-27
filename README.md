@@ -1,6 +1,7 @@
 # DOTA Report | [dota-report.vercel.app](https://dota-report.vercel.app/)
 
 View the app at [https://dota-report.vercel.app/](https://dota-report.vercel.app/)
+Run the CLI via `./dota-report generate`
 
 ## Development - Getting Started
 
