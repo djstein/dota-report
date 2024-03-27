@@ -19,6 +19,12 @@ Run the CLI via `./dota-report generate`
 ./dota-report generate --limit 1 --format yaml --output report.yaml
 ```
 
+## About
+
+The frontend Next.js application and the dota-report CLI tool share a common SDK to interact with the OpenDota API.
+The frontend will do server side render with the SDK to obtain the team or player data and display this on the user's browser.
+The CLI will simply call the SDK directly, and format it into YAML or JSON.
+
 ## Development - Getting Started
 
 ### Prerequisite: Install Node
