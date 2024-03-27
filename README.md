@@ -17,6 +17,8 @@ Run the CLI via `./dota-report generate`
 
 # Save the report to a file called report.yaml
 ./dota-report generate --limit 1 --format yaml --output report.yaml
+# Or to any relative path
+./dota-report generate --limit 1 --format yaml --output ~/Desktop/report.yaml
 ```
 
 ## About
