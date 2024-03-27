@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { writeFile } from "fs/promises";
 import YAML from "yaml";
 import { Argv } from "yargs";
 import { compileTeamsByProPlayers } from "./lib/dota-sdk";
@@ -19,7 +20,7 @@ require("yargs")
       });
       yargs.option("output", {
         describe: "Output file",
-        default: "output.yaml",
+        default: undefined,
       });
     },
     async (args: any) => {
@@ -30,7 +31,11 @@ require("yargs")
       } else {
         outputString = JSON.stringify(proPlayers, null, 2);
       }
-      console.log(outputString);
+      if (args.output) {
+        await writeFile(args.output, outputString);
+      } else {
+        console.log(outputString);
+      }
     },
   )
   .help().argv;

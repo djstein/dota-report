@@ -3,6 +3,22 @@
 View the app at [https://dota-report.vercel.app/](https://dota-report.vercel.app/)
 Run the CLI via `./dota-report generate`
 
+## Examples of report generation
+
+```bash
+# Run the default, get the top 10 teams and their players by total team experience
+./dota-report generate
+
+# Supply a limit on the number of teams returned
+./dota-report generate --limit 1 --format json
+
+# Output the remote in JSON
+./dota-report generate --limit 1 --format json
+
+# Save the report to a file called report.yaml
+./dota-report generate --limit 1 --format yaml --output report.yaml
+```
+
 ## Development - Getting Started
 
 ### Prerequisite: Install Node
@@ -49,10 +65,3 @@ npm run build:cli
 ```
 
 You can now navigate to [http://localhost:3000](http://localhost:3000) and view the application.
-
-# TODO:
-
-- add experience to player, which is full_history_time to now
-- output file destination
-- get total experience of a team
-- order teams by experience

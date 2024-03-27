@@ -11885,6 +11885,7 @@ var require_yargs = __commonJS({
 });
 
 // src/cli.ts
+var import_promises = require("fs/promises");
 var import_yaml = __toESM(require_dist());
 
 // src/lib/dota-sdk.ts
@@ -12013,7 +12014,7 @@ require_yargs().command(
     });
     yargs.option("output", {
       describe: "Output file",
-      default: "output.yaml"
+      default: void 0
     });
   },
   async (args) => {
@@ -12024,6 +12025,10 @@ require_yargs().command(
     } else {
       outputString = JSON.stringify(proPlayers, null, 2);
     }
-    console.log(outputString);
+    if (args.output) {
+      await (0, import_promises.writeFile)(args.output, outputString);
+    } else {
+      console.log(outputString);
+    }
   }
 ).help().argv;
