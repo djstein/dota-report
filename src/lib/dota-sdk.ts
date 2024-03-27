@@ -1,4 +1,4 @@
-import type { Player, Team } from "@/types/dota";
+import type { Player, Team, TeamPlayerAssociation } from "@/types/dota";
 
 const BASE_URL = "https://api.opendota.com/";
 
@@ -55,11 +55,11 @@ export async function getTeam({
   teamId: string;
 }): Promise<Team | undefined> {
   const teamUrl = new URL(`/api/teams/${teamId}`, BASE_URL);
-  const response = await fetcher(teamUrl).then((res) => res.json());
+  const response = await fetcher(teamUrl);
   if (!response) {
     return undefined;
   }
-  const team = response as Team;
+  let team = (await response.json()) as Team;
   return team;
 }
 
@@ -69,11 +69,24 @@ export async function getPlayersForTeam({
   teamId: string;
 }): Promise<Player[]> {
   const playersUrl = new URL(`/api/teams/${teamId}/players`, BASE_URL);
-  const response = await fetcher(playersUrl).then((res) => res.json());
+  const response = await fetcher(playersUrl);
   if (!response.ok) {
     return [];
   }
-  const players = response as Player[];
+  let teamPlayerAssociations =
+    (await response.json()) as TeamPlayerAssociation[];
+  let players: Player[] = [];
+  Promise.all(
+    teamPlayerAssociations.map(async (teamPlayerAssociation) => {
+      let player = await getPlayer({
+        accountId: teamPlayerAssociation.account_id.toString(),
+      });
+      if (player) {
+        players.push(player);
+      }
+    }),
+  );
+
   return players;
 }
 
@@ -83,10 +96,10 @@ export async function getPlayer({
   accountId: string;
 }): Promise<Player | undefined> {
   const playerUrl = new URL(`/api/players/${accountId}`, BASE_URL);
-  const response = await fetcher(playerUrl).then((res) => res.json());
+  const response = await fetcher(playerUrl);
   if (!response.ok) {
     return undefined;
   }
-  const player = response as Player;
+  let player = (await response.json()) as Player;
   return player;
 }

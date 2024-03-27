@@ -5,13 +5,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Team } from "@/types/dota";
+import { Player, Team } from "@/types/dota";
 import Image from "next/image";
+import PlayersList from "./players-list";
 
-export function TeamDetails({ team }: { team: Team }) {
+export function TeamDetails({
+  team,
+  players,
+}: {
+  team: Team;
+  players: Player[];
+}) {
   return (
-    <div className="w-full flex justify-center align-middle">
-      <Card>
+    <div className="w-full flex flex-col gap-4 justify-center align-middle items-center">
+      <Card className="max-w-xl">
         <CardHeader>
           <CardTitle>{team.name}</CardTitle>
           <CardDescription>
@@ -31,6 +38,7 @@ export function TeamDetails({ team }: { team: Team }) {
           )}
         </CardContent>
       </Card>
+      <PlayersList players={players} />
     </div>
   );
 }
