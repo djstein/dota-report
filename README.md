@@ -40,6 +40,11 @@ npm install
 
 # Run the Dev Server
 npm run dev
+
+# OR build the cli
+npm run build:cli
+# run it via:
+./dota-report
 ```
 
 You can now navigate to [http://localhost:3000](http://localhost:3000) and view the application.
