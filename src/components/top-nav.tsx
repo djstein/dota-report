@@ -15,6 +15,9 @@ export function TopNav() {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
+            <h1 className="font-extrabold p-2">DOTA Reports</h1>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
             <Link href="/teams" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Teams
