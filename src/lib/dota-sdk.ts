@@ -36,6 +36,7 @@ export async function getTeams(): Promise<Team[]> {
   const teamsUrl = new URL("/api/teams", BASE_URL);
   let response = await fetcher(teamsUrl);
   if (!response.ok) {
+    console.error("Failed to fetch teams");
     return [];
   }
   let teams = await response.json();
@@ -57,6 +58,7 @@ export async function getTeam({
   const teamUrl = new URL(`/api/teams/${teamId}`, BASE_URL);
   const response = await fetcher(teamUrl);
   if (!response) {
+    console.error("Failed to fetch team");
     return undefined;
   }
   let team = (await response.json()) as Team;
@@ -71,6 +73,7 @@ export async function getPlayersForTeam({
   const playersUrl = new URL(`/api/teams/${teamId}/players`, BASE_URL);
   const response = await fetcher(playersUrl);
   if (!response.ok) {
+    console.error("Failed to fetch players for team");
     return [];
   }
   let teamPlayerAssociations =
@@ -98,6 +101,7 @@ export async function getPlayer({
   const playerUrl = new URL(`/api/players/${accountId}`, BASE_URL);
   const response = await fetcher(playerUrl);
   if (!response.ok) {
+    console.error("Failed to fetch player");
     return undefined;
   }
   let player = (await response.json()) as Player;
