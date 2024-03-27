@@ -3,6 +3,8 @@ import type {
   ProPlayer,
   Team,
   TeamPlayerAssociation,
+  TeamWithPlayer,
+  TeamXPAndPlayerIds,
 } from "@/types/dota";
 
 const BASE_URL = "https://api.opendota.com/";
@@ -53,6 +55,75 @@ export async function getProPlayers(): Promise<ProPlayer[]> {
     }
   });
   return proPlayers;
+}
+
+export async function compileTeamsByProPlayers({
+  limit,
+}: {
+  limit?: number;
+}): Promise<TeamWithPlayer[]> {
+  const proPlayers = await getProPlayers();
+  let teamXPAndPlayerIdsObj: {
+    [key: string]: TeamXPAndPlayerIds;
+  } = {};
+
+  proPlayers.forEach((proPlayer) => {
+    if (proPlayer.team_id === undefined || proPlayer.team_id === null) {
+      return;
+    }
+    if (proPlayer.team_id in teamXPAndPlayerIdsObj) {
+      const experience = new Date(proPlayer.full_history_time).getTime();
+      teamXPAndPlayerIdsObj[proPlayer.team_id].totalExperience += experience;
+      teamXPAndPlayerIdsObj[proPlayer.team_id].proPlayers.push({
+        personaName: proPlayer.personaname,
+        experience: experience,
+        countryCode: proPlayer.loccountrycode,
+      });
+      teamXPAndPlayerIdsObj[proPlayer.team_id].teamId = proPlayer.team_id;
+    } else {
+      const experience = new Date(proPlayer.full_history_time).getTime();
+      teamXPAndPlayerIdsObj[proPlayer.team_id] = {
+        teamId: proPlayer.team_id,
+        totalExperience: experience,
+        proPlayers: [
+          {
+            personaName: proPlayer.personaname,
+            experience: experience,
+            countryCode: proPlayer.loccountrycode,
+          },
+        ],
+      };
+    }
+  });
+
+  let teamsToQuery = Object.values(teamXPAndPlayerIdsObj)
+    .sort((a, b) => {
+      if (a.totalExperience < b.totalExperience) {
+        return 1;
+      } else {
+        return -1;
+      }
+    })
+    .slice(0, limit);
+
+  let teamsWithPlayers: TeamWithPlayer[] = [];
+  await Promise.all(
+    teamsToQuery.map(async (team) => {
+      let teamObj = await getTeam({ teamId: team.teamId.toString() });
+      if (teamObj) {
+        teamsWithPlayers.push({
+          name: teamObj.name,
+          team_id: teamObj.team_id,
+          wins: teamObj.wins,
+          losses: teamObj.losses,
+          rating: teamObj.rating,
+          experience: team.totalExperience,
+          players: team.proPlayers,
+        });
+      }
+    }),
+  );
+  return teamsWithPlayers;
 }
 
 export async function getTeams({ limit }: { limit?: number }): Promise<Team[]> {

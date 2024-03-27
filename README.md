@@ -53,8 +53,6 @@ You can now navigate to [http://localhost:3000](http://localhost:3000) and view 
 # TODO:
 
 - add experience to player, which is full_history_time to now
-- api gets number of teams
-- provide number of teams to cli, which goes to api
 - output file destination
 - get total experience of a team
 - order teams by experience

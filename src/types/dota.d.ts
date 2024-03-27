@@ -1,3 +1,19 @@
+export interface TeamXPAndPlayerIds {
+  teamId: number;
+  totalExperience: number;
+  proPlayers: PlayerOutput[];
+}
+
+export interface TeamWithPlayer {
+  name: string;
+  team_id: string;
+  wins: number;
+  losses: number;
+  rating: number;
+  experience: number;
+  players: PlayerOutput[];
+}
+
 export interface ProPlayer {
   account_id: number;
   steamid: string;
