@@ -53,19 +53,19 @@ export default function ProPlayersList({
             <TableCell>{proPlayer.account_id}</TableCell>
             <TableCell>{proPlayer.name}</TableCell>
             <TableCell
-              className="cursor-pointer"
+              className="cursor-pointer underline underline-offset-2"
               onClick={() => router.push(`/teams/${proPlayer.team_id}`)}
             >
               {proPlayer.team_id}
             </TableCell>
             <TableCell
-              className="cursor-pointer"
+              className="cursor-pointer underline underline-offset-2"
               onClick={() => router.push(`/teams/${proPlayer.team_id}`)}
             >
               {proPlayer.team_name}
             </TableCell>
             <TableCell
-              className="cursor-pointer"
+              className="cursor-pointer underline underline-offset-2"
               onClick={() => router.push(`/teams/${proPlayer.team_id}`)}
             >
               {proPlayer.team_tag}

@@ -34,12 +34,15 @@ export default function TeamsList({ teams }: { teams: Team[] }) {
         <TableBody>
           {teams?.map((team) => (
             <TableRow
-              className="cursor-pointer"
               key={team.team_id}
               onClick={() => router.push(`/teams/${team.team_id}`)}
             >
-              <TableCell>{team.team_id}</TableCell>
-              <TableCell className="font-medium">{team.name}</TableCell>
+              <TableCell className="cursor-pointer underline underline-offset-2">
+                {team.team_id}
+              </TableCell>
+              <TableCell className="font-medium cursor-pointer underline underline-offset-2">
+                {team.name}
+              </TableCell>
               <TableCell>{team.tag}</TableCell>
               <TableCell>{team.wins}</TableCell>
               <TableCell>{team.losses}</TableCell>
