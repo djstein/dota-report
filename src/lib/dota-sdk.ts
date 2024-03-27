@@ -112,7 +112,6 @@ export async function getPlayersForTeam({
       }
     }),
   );
-
   return players;
 }
 
