@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(_request: NextRequest) {
   try {
-    const teams = await getTeams();
+    const teams = await getTeams({ limit: undefined });
     return NextResponse.json(teams, { status: 200 });
   } catch (error) {
     return NextResponse.json(
